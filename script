@@ -1,0 +1,16 @@
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+(new NunoMaduro\Collision\Provider)->register();
+
+$app = new Symfony\Component\Console\Application();
+
+$app->setName("Inserter");
+$app->setVersion("0.1");
+
+$app->addCommands([
+    new MakeCommands(),
+]);
+
+$app->run();
