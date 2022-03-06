@@ -48,7 +48,7 @@ class DocumentReaders
         $files = scandir($this->documentsPath);
         //$this->conn = new Connection('tributario', 'postgres', 'postgres', 'localhost');
         //$this->conn = pg_connect('host=localhost  port=5432 dbname=tributario user=postgres password=postgres');
-        $this->conn = pg_connect("host=localhost  port=5432 dbname=rfb_database user=forge password=cKSEbnqj97NvrJJScysb");
+        $this->conn = pg_connect("host=localhost  port=5432 dbname=tributario user=forge password=cKSEbnqj97NvrJJScysb");
 
         $inscricao = pg_query($this->conn, 'SELECT id, nome FROM divida_tipo_inscricoes');
         $inscricao_arr = pg_fetch_all($inscricao);
