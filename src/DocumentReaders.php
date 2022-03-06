@@ -26,7 +26,7 @@ class DocumentReaders
 
         $this->tableValues = [
             'cnpj', 
-            'cnpj_base', 
+            'cnpj_raiz', 
             'devedor_principal', 
             'nome_devedor', 
             'uf_id', 
