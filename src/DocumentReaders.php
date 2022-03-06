@@ -160,7 +160,8 @@ class DocumentReaders
         $situacao_inscricao_id = $fix_situacao; 
         $receita_principal_id = $fix_receita; 
 
-        $data_inscricao = str_replace("/", "-", $data[10]); 
+        $data_inscricao = str_replace("/", "-", $data[10]);
+        $data_inscricao = date_create($data_inscricao);
         $indicador_ajuizado = stristr("SIM", $data[11]) ? 'true' : 'false'; 
         $valor = str_replace(".", "", $data[12]);
 
