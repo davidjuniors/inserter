@@ -146,49 +146,57 @@ class DocumentReaders
 
         $i = 0;
 
-        $cnpj = str_replace([".", "-", "/", " "], "", $data[0]); 
-        $devedor_principal = $data[2] == 'PRINCIPAL' ? 'true' : 'false'; 
-        $nome_devedor = utf8_encode($data[3]); 
-        $uf_id = $estados[$data[4]]; 
-        $numero_inscrição = $data[6]; 
-
-        $fix_inscricao = key_exists(utf8_encode($data[7]), $this->ins_search) ? $this->ins_search[utf8_encode($data[7])] : 99999;
-        $fix_situacao = key_exists(utf8_encode($data[8]), $this->sit_search) ? $this->sit_search[utf8_encode($data[8])] : 99999;
-        $fix_receita = key_exists(utf8_encode($data[9]), $this->rec_search) ? $this->rec_search[utf8_encode($data[9])] : 99999;
-
-        $tipo_inscricao_id = $fix_inscricao; 
-        $situacao_inscricao_id = $fix_situacao; 
-        $receita_principal_id = $fix_receita; 
-
-        $data_inscricao = str_replace("/", "-", $data[10]);
-        $data_inscricao = date_create($data_inscricao)->format('Y-m-d');
-        $indicador_ajuizado = stristr("SIM", $data[11]) ? 'true' : 'false'; 
         $valor = str_replace(".", "", $data[12]);
+        $fix_situacao = key_exists(utf8_encode($data[8]), $this->sit_search) ? $this->sit_search[utf8_encode($data[8])] : 99999;
 
-        $this->arrayInsert[] = sprintf("(%s, %d, %s, '%s', %s, %s, %s, %s, %s, '%s', %s, %s)", 
-                                $cnpj, 
-                                substr($cnpj, 0, 8), 
-                                $devedor_principal, 
-                                pg_escape_string($this->conn, $nome_devedor), 
-                                $uf_id, 
-                                $numero_inscrição, 
-                                $tipo_inscricao_id, 
-                                $situacao_inscricao_id, 
-                                $receita_principal_id, 
-                                $data_inscricao, 
-                                $indicador_ajuizado, 
-                                $valor
-                            );
-        //var_dump($this->arrayInsert); die;
+        if (
+            ($valor >= 5000000) &&
+            ($fix_situacao == 4 || $fix_situacao == 7)
+        ) {
 
-        if ($i % 15000 == 0) {
-            $this->insertDatabase();
+            $cnpj = str_replace([".", "-", "/", " "], "", $data[0]); 
+            $devedor_principal = $data[2] == 'PRINCIPAL' ? 'true' : 'false'; 
+            $nome_devedor = utf8_encode($data[3]); 
+            $uf_id = $estados[$data[4]]; 
+            $numero_inscrição = $data[6]; 
+    
+            $fix_inscricao = key_exists(utf8_encode($data[7]), $this->ins_search) ? $this->ins_search[utf8_encode($data[7])] : 99999;
+            
+            $fix_receita = key_exists(utf8_encode($data[9]), $this->rec_search) ? $this->rec_search[utf8_encode($data[9])] : 99999;
+    
+            $tipo_inscricao_id = $fix_inscricao; 
+            $situacao_inscricao_id = $fix_situacao; 
+            $receita_principal_id = $fix_receita; 
+    
+            $data_inscricao = str_replace("/", "-", $data[10]);
+            $data_inscricao = date_create($data_inscricao)->format('Y-m-d');
+            $indicador_ajuizado = stristr("SIM", $data[11]) ? 'true' : 'false'; 
+            
+    
+            $this->arrayInsert[] = sprintf("(%s, %d, %s, '%s', %s, %s, %s, %s, %s, '%s', %s, %s)", 
+                                    $cnpj, 
+                                    substr($cnpj, 0, 8), 
+                                    $devedor_principal, 
+                                    pg_escape_string($this->conn, $nome_devedor), 
+                                    $uf_id, 
+                                    $numero_inscrição, 
+                                    $tipo_inscricao_id, 
+                                    $situacao_inscricao_id, 
+                                    $receita_principal_id, 
+                                    $data_inscricao, 
+                                    $indicador_ajuizado, 
+                                    $valor
+                                );
+            //var_dump($this->arrayInsert); die;
+    
+            if ($i % 15000 == 0) {
+                $this->insertDatabase();
+            }
+    
+            if ($this->endOfFile) {
+                $this->insertDatabase();
+            }
         }
-
-        if ($this->endOfFile) {
-            $this->insertDatabase();
-        }
-
     }
 
     private function insertDatabase(): void
