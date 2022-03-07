@@ -32,7 +32,7 @@ class DocumentReaders
             'uf_id', 
             'numero_inscrição', 
             'tipo_inscricao_id', 
-            'situacao_inscricao_id', 
+            'tipo_situacao_id', 
             'receita_principal_id', 
             'data_inscricao', 
             'indicador_ajuizado', 
@@ -165,7 +165,7 @@ class DocumentReaders
             $fix_receita = key_exists(utf8_encode($data[9]), $this->rec_search) ? $this->rec_search[utf8_encode($data[9])] : 99999;
     
             $tipo_inscricao_id = $fix_inscricao; 
-            $situacao_inscricao_id = $fix_situacao; 
+            $tipo_situacao_id = $fix_situacao; 
             $receita_principal_id = $fix_receita; 
     
             $data_inscricao = str_replace("/", "-", $data[10]);
@@ -181,7 +181,7 @@ class DocumentReaders
                                     $uf_id, 
                                     $numero_inscrição, 
                                     $tipo_inscricao_id, 
-                                    $situacao_inscricao_id, 
+                                    $tipo_situacao_id, 
                                     $receita_principal_id, 
                                     $data_inscricao, 
                                     $indicador_ajuizado, 
